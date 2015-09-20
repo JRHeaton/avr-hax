@@ -111,6 +111,9 @@ void LCD::setDRAMAddress(byte address) {
 }
 
 int LCD::file_put(char c, FILE *f) {
+    if (!f) {
+        return 1;
+    }
     if (c == '\n') {
         return 0;
     }
