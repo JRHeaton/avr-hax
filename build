@@ -1,0 +1,5 @@
+#!/usr/bin/env bash -v
+
+avr-g++ -Wno-int-to-pointer-cast -DF_CPU=8000000 -std=c++11 -O2 -mmcu=atmega328p -o hax hax.cpp LCD.cpp
+avr-objcopy -O ihex hax hax.hex 
+
