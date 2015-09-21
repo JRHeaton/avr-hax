@@ -3,8 +3,6 @@
 
 #include "USART0.h"
 
-#define LCD_STROBE_DURATION     1
-
 LCD::LCD(addr *data_dir, addr *data_port, addr *data_pin,
     addr *ctrl_dir, addr *ctrl_port,
     byte rs, byte rw, byte e) :
@@ -14,6 +12,10 @@ rs(rs), rw(rw), e(e)
 {
     *ctrl_dir = BYTE(rs) | BYTE(rw) | BYTE(e);
     *data_dir = 0XFF;
+    
+    file.put = LCD::file_put;
+    file.udata = this;
+    file.flags = __SRD | __SWR;
 }
 
 void LCD::selectDR() {
@@ -40,7 +42,7 @@ void LCD::strobeEnable() {
     setEnable(false);
 }
 
-unsigned char LCD::readBusyFlag() {
+byte LCD::readBusyFlagAndAC() {
     setRead(true);
     selectIR();
     
@@ -79,10 +81,10 @@ unsigned char LCD::readBusyFlag() {
 }
 
 void LCD::busyWait() {
-    while ((readBusyFlag() & 0x80) == 0x80) {}
+    while ((readBusyFlagAndAC() & 0x80) == 0x80) {}
 }
 
-void LCD::sendCommand(unsigned char cmd) {
+void LCD::sendCommand(byte cmd) {
     busyWait();
     
     setRead(false);
@@ -104,7 +106,7 @@ void LCD::sendCommand(unsigned char cmd) {
         *data_port |= low;
         strobeEnable();
         
-        *data_port &= ~(0xF0;
+        *data_port &= ~(0xF0);
     }
 }
 
@@ -151,6 +153,15 @@ void LCD::returnHome() {
 
 void LCD::displayMode(bool displayOn, bool cursorOn, bool cursorBlink) {
     sendCommand((1 << 3) | (displayOn << 2) | (cursorOn << 1) | cursorBlink);
+}
+
+void LCD::entryModeSet(bool increment, bool displayShift) {
+    sendCommand((1 << 2) | (increment << 1) | displayShift);
+}
+
+void LCD::shift(bool followDisplayShift,
+                bool directionRight) {
+    sendCommand((1 << 4) | (followDisplayShift << 3) | (directionRight << 2));
 }
 
 void LCD::functionSet(bool _8bit, bool _2line, bool useBigFont) {

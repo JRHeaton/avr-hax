@@ -34,15 +34,12 @@ int main() {
     USART0::init(9600);
     USART0::enableInput(true);
     USART0::enableOutput(true);
+    stdin = &USART0::file;
     
     LCD m(&LCD_DATA_DIRECTION, &LCD_DATA_PORT, &LCD_DATA_INPUT,
           &LCD_CONTROL_DIRECTION, &LCD_CONTROL_PORT,
           LCD_RS, LCD_RW, LCD_E);
-        
-    lcd_file.put = LCD::file_put;
-    lcd_file.udata = &m;
-    lcd_file.flags = __SWR;
-    stdout = &lcd_file;
+    stdout = &m.file;
 
     m.functionSet(
         false,   /* 8 bit logic */
@@ -57,12 +54,8 @@ int main() {
         true    /* cursor blink */
     );
     
-    serial_file.put = USART0::file_put;
-    serial_file.get = USART0::file_get;
-    serial_file.udata = 0;
-    serial_file.flags = __SRD | __SWR;
-    stdin = &serial_file;
-
+    bool blink = true;
+    
     while(1) {
         byte b = getchar();
         fputc(b, &serial_file);
@@ -88,7 +81,17 @@ int main() {
                     m.setDRAMAddress(0x40);
                     continue;
                 }
+                else if (y == 'C') {
+                    m.shift(false, false);
+                }
+                else if (y == 'D') {
+                    m.shift(false, true);
+                }
             }
+        }
+        else if (b == 2) { // ctrl+b
+            m.displayMode(true, true, blink = !blink);
+            continue;
         }
         
         m.sendCharacter(b);

@@ -11,12 +11,19 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+FILE USART0::file;
+
 void USART0::init(unsigned long baud) {
     unsigned long adjusted = (F_CPU/(16*baud))-1;
     UBRR0H = (adjusted >> 8) & 0xFF;
     UBRR0L = adjusted & 0xFF;
     
     UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+    
+    file.put = USART0::file_put;
+    file.get = USART0::file_get;
+    file.udata = 0;
+    file.flags = __SRD | __SWR;
 }
 
 void USART0::enableInput(bool enable) {

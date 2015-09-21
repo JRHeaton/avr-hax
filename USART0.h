@@ -20,6 +20,11 @@ public:
     static void enableOutput(bool enable);
     static void write(byte data);
     static byte read();
+    
+    static FILE file;
+    
+protected:
+    
     static int file_put(char c, FILE *f);
     static int file_get(FILE *f);
 };
