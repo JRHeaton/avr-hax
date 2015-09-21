@@ -82,10 +82,12 @@ int main() {
                     continue;
                 }
                 else if (y == 'C') {
-                    m.shift(false, false);
+                    m.shift(true, false);
+                    continue;
                 }
                 else if (y == 'D') {
-                    m.shift(false, true);
+                    m.shift(true, true);
+                    continue;
                 }
             }
         }
