@@ -4,6 +4,7 @@
 #include <avr/interrupt.h>
 
 #include "LCD.h"
+#include "USART0.h"
 
 // 8 bit LCD logic pins
 #define LCD_DATA_DIRECTION      DDRB
@@ -26,61 +27,25 @@
 FILE lcd_file;
 FILE serial_file;
 
-class USART0 {
-public:
-    
-    static void init(unsigned long baud) {
-        unsigned long adjusted = (F_CPU/(16*baud))-1;
-        UBRR0H = (adjusted >> 8) & 0xFF;
-        UBRR0L = adjusted & 0xFF;
-        
-        UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
-    }
-    
-    static void enableInput(bool enable) {
-        if (enable) { SET(UCSR0B, RXEN0); }
-        else        { UNSET(UCSR0B, RXEN0); }
-    }
-    
-    static void enableOutput(bool enable) {
-        if (enable) { SET(UCSR0B, TXEN0); }
-        else        { UNSET(UCSR0B, TXEN0); }
-    }
-    
-    static void write(byte data) {
-        while (!(UCSR0A & BYTE(UDRE0))) {}
-        UDR0 = data;
-    }
-    
-    static byte read() {
-        while (!(UCSR0A & BYTE(RXC0))) {}
-        return UDR0;
-    }
-    
-    static int file_put(char c, FILE *f) {
-        USART0::write(c);
-    }
-    
-    static int file_get(FILE *f) {
-        return USART0::read();
-    }
-};
-
 int main() {
     LED_DIRECTION = 0xFF;
     SET(LED_PORT, LED);
     
+    USART0::init(9600);
+    USART0::enableInput(true);
+    USART0::enableOutput(true);
+    
     LCD m(&LCD_DATA_DIRECTION, &LCD_DATA_PORT, &LCD_DATA_INPUT,
           &LCD_CONTROL_DIRECTION, &LCD_CONTROL_PORT,
           LCD_RS, LCD_RW, LCD_E);
-    
+        
     lcd_file.put = LCD::file_put;
     lcd_file.udata = &m;
     lcd_file.flags = __SWR;
     stdout = &lcd_file;
 
     m.functionSet(
-        true,   /* 8 bit logic */
+        false,   /* 8 bit logic */
         true,   /* 2-line display */
         false   /* 5x8 font */
     );
@@ -91,10 +56,6 @@ int main() {
         true,   /* cursor on */
         true    /* cursor blink */
     );
-    
-    USART0::init(9600);
-    USART0::enableInput(true);
-    USART0::enableOutput(true);
     
     serial_file.put = USART0::file_put;
     serial_file.get = USART0::file_get;

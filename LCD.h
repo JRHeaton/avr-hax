@@ -11,6 +11,8 @@ public:
         addr *ctrl_dir, addr *ctrl_port,
         byte rs, byte rw, byte e);
     
+    bool _8bitmode = true;
+    
     void selectDR();
     void selectIR();
     

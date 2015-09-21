@@ -1,6 +1,8 @@
 #include "LCD.h"
 #include <util/delay.h>
 
+#include "USART0.h"
+
 #define LCD_STROBE_DURATION     1
 
 LCD::LCD(addr *data_dir, addr *data_port, addr *data_pin,
@@ -11,6 +13,7 @@ ctrl_dir(ctrl_dir), ctrl_port(ctrl_port),
 rs(rs), rw(rw), e(e)
 {
     *ctrl_dir = BYTE(rs) | BYTE(rw) | BYTE(e);
+    *data_dir = 0XFF;
 }
 
 void LCD::selectDR() {
@@ -38,21 +41,41 @@ void LCD::strobeEnable() {
 }
 
 unsigned char LCD::readBusyFlag() {
-    // direction = input
-    *data_dir = 0;
-    
     setRead(true);
     selectIR();
     
-    setEnable(true);
-    _delay_ms(LCD_STROBE_DURATION);
-    unsigned char ret = *data_pin;
-    setEnable(false);
+    if (_8bitmode) {
+        *data_dir = 0;
+        
+        setEnable(true);
+        _delay_ms(LCD_STROBE_DURATION);
+        unsigned char ret = *data_pin;
+        setEnable(false);
+        
+        *data_dir = 0xFF;
+        
+        return ret;
+    } else {
+        *data_dir &= ~(0xF0);
+        
+        setEnable(true);
+        _delay_ms(LCD_STROBE_DURATION);
+
+        unsigned char high = *data_pin & 0xF0;
+        setEnable(false);
+        
+        setEnable(true);
+        _delay_ms(LCD_STROBE_DURATION);
+
+        unsigned char low = (*data_pin & 0xF0) >> 4;
+        setEnable(false);
+        
+        *data_dir |= 0xF0;
+        
+        return (high | low);
+    }
     
-    // direction = output
-    *data_dir = 0xFF;
-    
-    return ret;
+    return 0;
 }
 
 void LCD::busyWait() {
@@ -60,25 +83,63 @@ void LCD::busyWait() {
 }
 
 void LCD::sendCommand(unsigned char cmd) {
-    busyWait();
-    
-    *data_port = cmd;
-    setRead(false);
-    selectIR();
-    
-    strobeEnable();
+    if (_8bitmode) {
+        busyWait();
+        
+        setRead(false);
+        selectIR();
+        
+        *data_port = cmd;
+
+        strobeEnable();
+    } else {
+        busyWait();
+        
+        setRead(false);
+        selectIR();
+        
+        byte high = cmd & 0xF0;
+        byte low = (cmd & 0x0F) << 4;
+        
+        *data_port &= ~(0xF0);
+        *data_port |= high;
+        strobeEnable();
+        
+        *data_port &= ~(0xF0);
+        *data_port |= low;
+        strobeEnable();
+    }
     
     *data_port = 0;
 }
 
 void LCD::sendCharacter(char character) {
-    busyWait();
-    
-    *data_port = character;
-    
-    setRead(false);
-    selectDR();
-    strobeEnable();
+    if (_8bitmode) {
+        busyWait();
+        
+        setRead(false);
+        selectDR();
+        
+        *data_port = character;
+        
+        strobeEnable();
+    } else {
+        busyWait();
+        
+        setRead(false);
+        selectDR();
+        
+        byte high = character & 0xF0;
+        byte low = (character & 0x0F) << 4;
+        
+        *data_port &= ~(0xF0);
+        *data_port |= high;
+        strobeEnable();
+        
+        *data_port &= ~(0xF0);
+        *data_port |= low;
+        strobeEnable();
+    }
     
     *data_port = 0;
 }
@@ -104,6 +165,13 @@ void LCD::displayMode(bool displayOn, bool cursorOn, bool cursorBlink) {
 
 void LCD::functionSet(bool _8bit, bool _2line, bool useBigFont) {
     sendCommand((1 << 5) | (_8bit << 4) | (_2line << 3) | (useBigFont << 2));
+    
+    _8bitmode = _8bit;
+
+    if (!_8bit) {
+        // re-send proper function set after initial one sent as 8-bit (necessary
+        sendCommand((1 << 5) | (_8bit << 4) | (_2line << 3) | (useBigFont << 2));
+    }
 }
 
 void LCD::setDRAMAddress(byte address) {
