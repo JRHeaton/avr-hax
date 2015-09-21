@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include <avr/eeprom.h>
 
 #include "LCD.h"
 #include "USART0.h"
@@ -54,6 +55,12 @@ int main() {
         true    /* cursor blink */
     );
     
+    byte b=0,*i=0;
+    while ((b = eeprom_read_byte((uint8_t *)i)) != 0) {
+        m.sendCharacter(b);
+        ++i;
+    }
+
     bool blink = true;
     
     while(1) {
