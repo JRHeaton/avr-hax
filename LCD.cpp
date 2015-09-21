@@ -83,21 +83,16 @@ void LCD::busyWait() {
 }
 
 void LCD::sendCommand(unsigned char cmd) {
-    if (_8bitmode) {
-        busyWait();
-        
-        setRead(false);
-        selectIR();
-        
-        *data_port = cmd;
+    busyWait();
+    
+    setRead(false);
+    selectIR();
 
+    if (_8bitmode) {
+        *data_port = cmd;
         strobeEnable();
+        *data_port = 0;
     } else {
-        busyWait();
-        
-        setRead(false);
-        selectIR();
-        
         byte high = cmd & 0xF0;
         byte low = (cmd & 0x0F) << 4;
         
@@ -108,27 +103,22 @@ void LCD::sendCommand(unsigned char cmd) {
         *data_port &= ~(0xF0);
         *data_port |= low;
         strobeEnable();
+        
+        *data_port &= ~(0xF0;
     }
-    
-    *data_port = 0;
 }
 
 void LCD::sendCharacter(char character) {
+    busyWait();
+    
+    setRead(false);
+    selectDR();
+
     if (_8bitmode) {
-        busyWait();
-        
-        setRead(false);
-        selectDR();
-        
         *data_port = character;
-        
         strobeEnable();
+        *data_port = 0;
     } else {
-        busyWait();
-        
-        setRead(false);
-        selectDR();
-        
         byte high = character & 0xF0;
         byte low = (character & 0x0F) << 4;
         
@@ -139,9 +129,9 @@ void LCD::sendCharacter(char character) {
         *data_port &= ~(0xF0);
         *data_port |= low;
         strobeEnable();
+        
+        *data_port &= ~(0xF0);
     }
-    
-    *data_port = 0;
 }
 
 void LCD::sendString(const char *string) {
