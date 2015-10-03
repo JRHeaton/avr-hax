@@ -25,9 +25,12 @@ PRODUCT_BASE		= $(OBJDIR)/$(NAME)
 SOURCES				= main.cpp LCD.cpp Pin.cpp Port.cpp
 OBJS				= $(SOURCES:%.cpp=$(OBJDIR)/%.o)
 
-all: $(OBJDIR)/$(NAME).hex $(OBJDIR)/$(NAME).eeprom
+all: $(PRODUCT_BASE).hex $(PRODUCT_BASE).eeprom
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+$(OBJDIR):
+	mkdir $@
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(PRODUCT_BASE).elf: $(OBJS) $(wildcard include/*.h)
