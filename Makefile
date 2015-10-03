@@ -4,9 +4,14 @@ DEVICE=at90usb162
 F_CPU=16000000UL
 PROGRAMMER=usbtiny
 OPTIMIZATION=s
-CFLAGS=-Wall -I./include -O$(OPTIMIZATION) -mmcu=$(DEVICE) -std=c++11 -DF_CPU=$(F_CPU)
+CFLAGS=	-Wall \
+		-I./include \
+		-O$(OPTIMIZATION) \
+		-mmcu=$(DEVICE) \
+		-std=c++11 \
+		-DF_CPU=$(F_CPU)
 NAME=hax
-OBJS=build/main.o build/LCD.o
+OBJS=build/main.o build/LCD.o build/Pin.o
 
 AVRDUDE=avrdude -p $(DEVICE) -c $(PROGRAMMER)
 

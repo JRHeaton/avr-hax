@@ -8,5 +8,6 @@ typedef volatile byte addr;
 #define BYTE(bit) (1 << (bit))
 #define SET(b, bit) ((b) |= BYTE(bit))
 #define UNSET(b, bit) ((b) &= ~BYTE(bit))
+#define TOGGLE(b, bit) ((b) ^= BYTE(bit))
 
 #endif
