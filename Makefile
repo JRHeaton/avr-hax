@@ -2,6 +2,7 @@ CC=avr-g++
 OBJCOPY=avr-objcopy
 DEVICE=at90usb162
 F_CPU=16000000UL
+F_USB=$(F_CPU)
 PROGRAMMER=usbtiny
 OPTIMIZATION=s
 CFLAGS=	-Wall \
@@ -9,7 +10,8 @@ CFLAGS=	-Wall \
 		-O$(OPTIMIZATION) \
 		-mmcu=$(DEVICE) \
 		-std=c++11 \
-		-DF_CPU=$(F_CPU)
+		-DF_CPU=$(F_CPU) \
+		-DF_USB=$(F_USB)
 NAME=hax
 AVRDUDE=avrdude -p $(DEVICE) -c $(PROGRAMMER)
 
