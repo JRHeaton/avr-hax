@@ -706,6 +706,20 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
+		094A2A501BBFCDBE00ED8149 /* flash */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = flash;
+			buildConfigurationList = 094A2A511BBFCDBE00ED8149 /* Build configuration list for PBXLegacyTarget "flash" */;
+			buildPhases = (
+			);
+			buildToolPath = make;
+			buildWorkingDirectory = "";
+			dependencies = (
+			);
+			name = flash;
+			passBuildSettingsInEnvironment = 1;
+			productName = flash;
+		};
 		09B4FCBB1BAF51B400C10467 /* build */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = build;
@@ -747,6 +761,9 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "John Heaton";
 				TargetAttributes = {
+					094A2A501BBFCDBE00ED8149 = {
+						CreatedOnToolsVersion = 7.0.1;
+					};
 					09B4FCBB1BAF51B400C10467 = {
 						CreatedOnToolsVersion = 7.0;
 					};
@@ -768,6 +785,7 @@
 			projectRoot = "";
 			targets = (
 				09B4FCBB1BAF51B400C10467 /* build */,
+				094A2A501BBFCDBE00ED8149 /* flash */,
 				09B4FCEB1BAF529B00C10467 /* index */,
 			);
 		};
@@ -788,6 +806,33 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		094A2A521BBFCDBE00ED8149 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		094A2A531BBFCDBE00ED8149 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		09B4FCBC1BAF51B400C10467 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -920,6 +965,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		094A2A511BBFCDBE00ED8149 /* Build configuration list for PBXLegacyTarget "flash" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				094A2A521BBFCDBE00ED8149 /* Debug */,
+				094A2A531BBFCDBE00ED8149 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		09B4FCBA1BAF51B400C10467 /* Build configuration list for PBXProject "hax" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
