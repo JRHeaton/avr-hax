@@ -26,7 +26,7 @@
 		094A2A4F1BBFC4DA00ED8149 /* Pin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pin.h; sourceTree = "<group>"; };
 		094A2A541BBFCF7900ED8149 /* Port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Port.cpp; sourceTree = "<group>"; };
 		094A2A561BBFCF8300ED8149 /* Port.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Port.h; sourceTree = "<group>"; };
-		09BCD1341BBFD056001173A0 /* index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = index; sourceTree = BUILT_PRODUCTS_DIR; };
+		09BCD1341BBFD056001173A0 /* index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = index; path = "/Users/j/dev/projects/atmega328p-stuff/hax/build/Debug/index"; sourceTree = "<absolute>"; };
 		09BCD1351BBFDCEF001173A0 /* PinMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PinMap.h; sourceTree = "<group>"; };
 		09F4B4A71BAF534D00078869 /* alloca.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloca.h; sourceTree = "<group>"; };
 		09F4B4A81BAF534D00078869 /* assert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = assert.h; sourceTree = "<group>"; };
@@ -373,7 +373,6 @@
 				094A2A4B1BBFC22900ED8149 /* avr  */,
 				094A2A3F1BBFBCA300ED8149 /* include */,
 				094A2A431BBFBCA300ED8149 /* src */,
-				09BCD1341BBFD056001173A0 /* index */,
 			);
 			sourceTree = "<group>";
 		};
