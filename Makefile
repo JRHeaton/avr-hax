@@ -17,7 +17,7 @@ PRODUCT_BASE		= $(OBJDIR)/$(NAME)
 PRODUCT_ELF			= $(PRODUCT_BASE).elf
 PRODUCT_APP			= $(PRODUCT_BASE).hex
 PRODUCT_EEPROM		= $(PRODUCT_BASE).eeprom.hex
-OBJS				= $(SOURCES:%.cpp=$(OBJDIR)/%.o)
+OBJS				= $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 NAME				= hax
 DEVICE				= at90usb162
@@ -26,7 +26,7 @@ PROGRAMMER			= usbtiny
 F_CPU				= 16000000UL
 F_USB				= $(F_CPU)
 
-SOURCES				= main.cpp LCD.cpp Pin.cpp Port.cpp
+SOURCES				= $(wildcard $(SRCDIR)/*.cpp)
 
 .PHONY: all
 all: app eeprom
