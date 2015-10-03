@@ -7,7 +7,7 @@
 #include "Pin.h"
 
 __attribute__((section(".eeprom")))
-unsigned char greeting[] = "what's up?";
+unsigned char sequence = 0b01010010;
 
 int main() {
     
@@ -15,9 +15,13 @@ int main() {
     Pin pb6 = {&portB, PB6};
     pb6.setMode(OUTPUT);
     
+    unsigned char _sequence = eeprom_read_byte(0);
+    
     while (1) {
-        _delay_ms(1000);
-        pb6.toggle();
+        for (uint8_t i=0;i<8;++i) {
+            pb6 = (_sequence & (1 << i));
+            _delay_ms(1000);
+        }
     }
     
     return 0;

@@ -40,6 +40,10 @@ public:
     void high() { SET(*port->output, pin_number); }
     void low()  { UNSET(*port->output, pin_number); }
     void toggle() { TOGGLE(*port->output, pin_number); }
+    
+    void operator= (uint8_t value) {
+        if (!value) { low(); } else { high(); }
+    }
 };
 
 #endif /* Pin_h */
