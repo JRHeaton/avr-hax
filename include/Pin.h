@@ -21,7 +21,7 @@ struct Pin {
 public:
     Port *port;
     uint8_t pin_number;
-    
+        
     void setMode(uint8_t mode) {
         switch (mode) {
             case INPUT:
