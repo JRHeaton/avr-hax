@@ -1,7 +1,7 @@
 CC					= avr-g++
 OBJCOPY				= avr-objcopy
 CFLAGS				= -Wall					\
-						-I./include			\
+						-I$(INCLUDEDIR)		\
 						-O$(OPTIMIZATION)	\
 						-mmcu=$(DEVICE)		\
 						-std=c++11			\
@@ -9,10 +9,11 @@ CFLAGS				= -Wall					\
 						-DF_USB=$(F_USB)
 FLASH_COPY_FLAGS	= -R .eeprom
 EEPROM_COPY_FLAGS	= -j .eeprom --change-section-lma .eeprom=0x0
-AVRDUDE				= avrdude -p $(DEVICE) -c $(PROGRAMMER)
+AVRDUDE				= avrdude -p $(DEVICE) -c $(PROGRAMMER) -V
 OBJDIR				= build
 DUMPDIR				= dump_$(DEVICE)
 SRCDIR				= src
+INCLUDEDIR			= include
 PRODUCT_BASE		= $(OBJDIR)/$(NAME)
 PRODUCT_ELF			= $(PRODUCT_BASE).elf
 PRODUCT_APP			= $(PRODUCT_BASE).hex
@@ -38,10 +39,10 @@ eeprom: $(PRODUCT_EEPROM)
 $(OBJDIR):
 	mkdir $@
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCLUDEDIR)/%.h | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(PRODUCT_ELF): $(OBJS) $(wildcard include/*.h)
+$(PRODUCT_ELF): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
 $(PRODUCT_APP): $(PRODUCT_BASE).elf
@@ -50,16 +51,16 @@ $(PRODUCT_APP): $(PRODUCT_BASE).elf
 $(PRODUCT_EEPROM): $(PRODUCT_BASE).elf
 	$(OBJCOPY) $(EEPROM_COPY_FLAGS) -O ihex $< $@
 
-.PHONY: flash
-flash: build
+.PHONY: flashapp
+flashapp: $(PRODUCT_APP)
 	$(AVRDUDE) -U flash:w:$(PRODUCT_APP):i
 
 .PHONY: flasheeprom
-flasheeprom:
+flasheeprom: $(PRODUCT_EEPROM)
 	$(AVRDUDE) -U eeprom:w:$(PRODUCT_EEPROM):i
 
 .PHONY: flashall
-flashall: flash flasheeprom
+flashall: flashapp flasheeprom
 
 .PHONY: dump
 dump: cleandump
