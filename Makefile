@@ -36,12 +36,20 @@ flashall: flash flasheeprom
 
 dump: cleandump
 	mkdir dump_$(DEVICE)
-	$(AVRDUDE) 																	\
+	$(AVRDUDE)										\
 		-U flash:r:dump_$(DEVICE)/flash.bin:r 		\
 		-U eeprom:r:dump_$(DEVICE)/eeprom.bin:r 	\
 		-U hfuse:r:dump_$(DEVICE)/hfuse.bin:r 		\
 		-U lfuse:r:dump_$(DEVICE)/lfuse.bin:r 		\
 		-U efuse:r:dump_$(DEVICE)/efuse.bin:r
+
+restoredump:
+	$(AVRDUDE)										\
+		-U flash:w:dump_$(DEVICE)/flash.bin:r 		\
+		-U eeprom:w:dump_$(DEVICE)/eeprom.bin:r 	\
+		-U hfuse:w:dump_$(DEVICE)/hfuse.bin:r 		\
+		-U lfuse:w:dump_$(DEVICE)/lfuse.bin:r 		\
+		-U efuse:w:dump_$(DEVICE)/efuse.bin:r
 
 shell:
 	$(AVRDUDE) -t
