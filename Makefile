@@ -52,15 +52,18 @@ $(PRODUCT_EEPROM): $(PRODUCT_BASE).elf
 	$(OBJCOPY) $(EEPROM_COPY_FLAGS) -O ihex $< $@
 
 .PHONY: flashapp
+FLASH_APP_ARGUMENTS=-U flash:w:$(PRODUCT_APP):i
 flashapp: $(PRODUCT_APP)
-	$(AVRDUDE) -U flash:w:$(PRODUCT_APP):i
+	$(AVRDUDE) $(FLASH_APP_ARGUMENTS)
 
 .PHONY: flasheeprom
+FLASH_EEPROM_ARGUMENTS=-U eeprom:w:$(PRODUCT_EEPROM):i
 flasheeprom: $(PRODUCT_EEPROM)
-	$(AVRDUDE) -U eeprom:w:$(PRODUCT_EEPROM):i
+	$(AVRDUDE) $(FLASH_EEPROM_ARGUMENTS)
 
 .PHONY: flashall
-flashall: flashapp flasheeprom
+flashall: $(PRODUCT_APP) $(PRODUCT_EEPROM)
+	$(AVRDUDE) $(FLASH_APP_ARGUMENTS) $(FLASH_EEPROM_ARGUMENTS)
 
 .PHONY: dump
 dump: cleandump
