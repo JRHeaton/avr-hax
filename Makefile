@@ -59,6 +59,9 @@ restoredump:
 shell:
 	$(AVRDUDE) -t
 
+erase:
+	$(AVRDUDE) -e
+
 cleandump:
 	rm -rf dump_$(DEVICE)
 
