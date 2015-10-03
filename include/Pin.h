@@ -19,31 +19,16 @@
 
 struct Pin {
 public:
+    
     Port *port;
     uint8_t pin_number;
         
-    void setMode(uint8_t mode) {
-        switch (mode) {
-            case INPUT:
-                UNSET(*port->direction, pin_number);
-                break;
-            case OUTPUT:
-                SET(*port->direction, pin_number);
-                break;
-            case INPUT_PULLUP:
-                UNSET(*port->direction, pin_number);
-                high();
-                break;
-        }
-    }
+    void setMode(uint8_t mode);
+    void high();
+    void low();
+    void toggle();
     
-    void high() { SET(*port->output, pin_number); }
-    void low()  { UNSET(*port->output, pin_number); }
-    void toggle() { TOGGLE(*port->output, pin_number); }
-    
-    void operator= (uint8_t value) {
-        if (!value) { low(); } else { high(); }
-    }
+    void operator= (uint8_t value);
 };
 
 #endif /* Pin_h */

@@ -10,21 +10,18 @@ public:
     volatile uint8_t *direction;
     volatile uint8_t *input;
     volatile uint8_t *output;
-    
 };
 
-#define DEFINE_PORT(xx) Port Port ## xx = { &DDR ## xx, &PIN ## xx, &PORT ##xx };
-
 #ifdef PORTB
-DEFINE_PORT(B);
+extern Port PortB;
 #endif
 
 #ifdef PORTC
-DEFINE_PORT(C);
+extern Port PortC;
 #endif
 
 #ifdef PORTD
-DEFINE_PORT(D);
+extern Port PortD;
 #endif
 
 #endif

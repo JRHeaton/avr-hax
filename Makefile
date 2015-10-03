@@ -15,14 +15,14 @@ CFLAGS=	-Wall \
 NAME=hax
 AVRDUDE=avrdude -p $(DEVICE) -c $(PROGRAMMER)
 
-OBJS=build/main.o build/LCD.o build/Pin.o build/Port.o
+OBJS=build/main.o build/Pin.o build/Port.o
 
 all: build
 
 build: $(OBJS) build/$(NAME).elf build/$(NAME).hex build/$(NAME).eeprom
 
 build/%.elf: $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
 build/%.hex: build/%.elf
 	$(OBJCOPY) -R .eeprom -O ihex $< $@
