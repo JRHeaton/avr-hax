@@ -13,6 +13,11 @@ AVRDUDE				= avrdude -p $(DEVICE) -c $(PROGRAMMER)
 OBJDIR				= build
 DUMPDIR				= dump_$(DEVICE)
 SRCDIR				= src
+PRODUCT_BASE		= $(OBJDIR)/$(NAME)
+PRODUCT_ELF			= $(PRODUCT_BASE).elf
+PRODUCT_APP			= $(PRODUCT_BASE).hex
+PRODUCT_EEPROM		= $(PRODUCT_BASE).eeprom.hex
+OBJS				= $(SOURCES:%.cpp=$(OBJDIR)/%.o)
 
 NAME				= hax
 DEVICE				= at90usb162
@@ -21,11 +26,14 @@ PROGRAMMER			= usbtiny
 F_CPU				= 16000000UL
 F_USB				= $(F_CPU)
 
-PRODUCT_BASE		= $(OBJDIR)/$(NAME)
 SOURCES				= main.cpp LCD.cpp Pin.cpp Port.cpp
-OBJS				= $(SOURCES:%.cpp=$(OBJDIR)/%.o)
 
-all: $(PRODUCT_BASE).hex $(PRODUCT_BASE).eeprom
+.PHONY: all
+all: app eeprom
+
+.PHONY: app eeprom
+app: $(PRODUCT_APP)
+eeprom: $(PRODUCT_EEPROM)
 
 $(OBJDIR):
 	mkdir $@
@@ -33,23 +41,27 @@ $(OBJDIR):
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(PRODUCT_BASE).elf: $(OBJS) $(wildcard include/*.h)
+$(PRODUCT_ELF): $(OBJS) $(wildcard include/*.h)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
-$(PRODUCT_BASE).hex: $(PRODUCT_BASE).elf
+$(PRODUCT_APP): $(PRODUCT_BASE).elf
 	$(OBJCOPY) $(FLASH_COPY_FLAGS) -O ihex $< $@
 
-$(PRODUCT_BASE).eeprom: $(PRODUCT_BASE).elf
+$(PRODUCT_EEPROM): $(PRODUCT_BASE).elf
 	$(OBJCOPY) $(EEPROM_COPY_FLAGS) -O ihex $< $@
 
+.PHONY: flash
 flash: build
-	$(AVRDUDE) -U flash:w:build/$(NAME).hex:i
+	$(AVRDUDE) -U flash:w:$(PRODUCT_APP):i
 
+.PHONY: flasheeprom
 flasheeprom:
-	$(AVRDUDE) -U eeprom:w:build/$(NAME).eeprom:i
+	$(AVRDUDE) -U eeprom:w:$(PRODUCT_EEPROM):i
 
+.PHONY: flashall
 flashall: flash flasheeprom
 
+.PHONY: dump
 dump: cleandump
 	mkdir dump_$(DEVICE)
 	$(AVRDUDE)									\
@@ -59,6 +71,7 @@ dump: cleandump
 		-U lfuse:r:$(DUMPDIR)/lfuse.bin:r 		\
 		-U efuse:r:$(DUMPDIR)/efuse.bin:r
 
+.PHONY: restoredump
 restoredump:
 	$(AVRDUDE)									\
 		-U flash:w:$(DUMPDIR)/flash.bin:r 		\
@@ -67,16 +80,21 @@ restoredump:
 		-U lfuse:w:$(DUMPDIR)/lfuse.bin:r 		\
 		-U efuse:w:$(DUMPDIR)/efuse.bin:r
 
+.PHONY: shell
 shell:
 	$(AVRDUDE) -t
 
+.PHONY: erase
 erase:
 	$(AVRDUDE) -e
 
+.PHONY: cleandump
 cleandump:
 	rm -rf $(DUMPDIR)
 
+.PHONY: clean
 clean:
 	rm -f $(OBJDIR)/*
 
+.PHONY: cleanall
 cleanall: clean cleandump
