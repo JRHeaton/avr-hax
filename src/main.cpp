@@ -15,7 +15,7 @@ int main() {
     
     while (1) {
         pins[20].toggle();
-        _delay_ms(1000);
+        _delay_ms(100);
     }
     
     return 0;

@@ -21,7 +21,7 @@
 		094A2A441BBFBCA300ED8149 /* LCD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCD.cpp; sourceTree = "<group>"; };
 		094A2A451BBFBCA300ED8149 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		094A2A461BBFBCA300ED8149 /* USART0.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = USART0.cpp; sourceTree = "<group>"; };
-		094A2A4A1BBFBE8E00ED8149 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; path = Makefile; sourceTree = SOURCE_ROOT; tabWidth = 4; usesTabs = 1; };
+		094A2A4A1BBFBE8E00ED8149 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = SOURCE_ROOT; tabWidth = 4; usesTabs = 1; };
 		094A2A4C1BBFC4C400ED8149 /* Pin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pin.cpp; sourceTree = "<group>"; };
 		094A2A4F1BBFC4DA00ED8149 /* Pin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pin.h; sourceTree = "<group>"; };
 		094A2A541BBFCF7900ED8149 /* Port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Port.cpp; sourceTree = "<group>"; };

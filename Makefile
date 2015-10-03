@@ -1,37 +1,43 @@
-CC=avr-g++
-OBJCOPY=avr-objcopy
-DEVICE=at90usb162
-F_CPU=16000000UL
-F_USB=$(F_CPU)
-PROGRAMMER=usbtiny
-OPTIMIZATION=s
-CFLAGS=	-Wall \
-		-I./include \
-		-O$(OPTIMIZATION) \
-		-mmcu=$(DEVICE) \
-		-std=c++11 \
-		-DF_CPU=$(F_CPU) \
-		-DF_USB=$(F_USB)
-NAME=hax
-AVRDUDE=avrdude -p $(DEVICE) -c $(PROGRAMMER)
+CC					= avr-g++
+OBJCOPY				= avr-objcopy
+CFLAGS				= -Wall					\
+						-I./include			\
+						-O$(OPTIMIZATION)	\
+						-mmcu=$(DEVICE)		\
+						-std=c++11			\
+						-DF_CPU=$(F_CPU)	\
+						-DF_USB=$(F_USB)
+FLASH_COPY_FLAGS	= -R .eeprom
+EEPROM_COPY_FLAGS	= -j .eeprom --change-section-lma .eeprom=0x0
+AVRDUDE				= avrdude -p $(DEVICE) -c $(PROGRAMMER)
+OBJDIR				= build
+DUMPDIR				= dump_$(DEVICE)
+SRCDIR				= src
 
-OBJS=build/main.o build/Pin.o build/Port.o
+NAME				= hax
+DEVICE				= at90usb162
+OPTIMIZATION		= s
+PROGRAMMER			= usbtiny
+F_CPU				= 16000000UL
+F_USB				= $(F_CPU)
 
-all: build
+PRODUCT_BASE		= $(OBJDIR)/$(NAME)
+SOURCES				= main.cpp LCD.cpp Pin.cpp Port.cpp
+OBJS				= $(SOURCES:%.cpp=$(OBJDIR)/%.o)
 
-build: $(OBJS) build/$(NAME).elf build/$(NAME).hex build/$(NAME).eeprom
+all: $(OBJDIR)/$(NAME).hex $(OBJDIR)/$(NAME).eeprom
 
-build/%.elf: $(OBJS)
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(PRODUCT_BASE).elf: $(OBJS) $(wildcard include/*.h)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
-build/%.hex: build/%.elf
-	$(OBJCOPY) -R .eeprom -O ihex $< $@
+$(PRODUCT_BASE).hex: $(PRODUCT_BASE).elf
+	$(OBJCOPY) $(FLASH_COPY_FLAGS) -O ihex $< $@
 
-build/%.eeprom: build/%.elf
-	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0x0 -O ihex $< $@
-
-build/%.o: src/%.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+$(PRODUCT_BASE).eeprom: $(PRODUCT_BASE).elf
+	$(OBJCOPY) $(EEPROM_COPY_FLAGS) -O ihex $< $@
 
 flash: build
 	$(AVRDUDE) -U flash:w:build/$(NAME).hex:i
@@ -43,20 +49,20 @@ flashall: flash flasheeprom
 
 dump: cleandump
 	mkdir dump_$(DEVICE)
-	$(AVRDUDE)										\
-		-U flash:r:dump_$(DEVICE)/flash.bin:r 		\
-		-U eeprom:r:dump_$(DEVICE)/eeprom.bin:r 	\
-		-U hfuse:r:dump_$(DEVICE)/hfuse.bin:r 		\
-		-U lfuse:r:dump_$(DEVICE)/lfuse.bin:r 		\
-		-U efuse:r:dump_$(DEVICE)/efuse.bin:r
+	$(AVRDUDE)									\
+		-U flash:r:$(DUMPDIR)/flash.bin:r 		\
+		-U eeprom:r:$(DUMPDIR)/eeprom.bin:r 	\
+		-U hfuse:r:$(DUMPDIR)/hfuse.bin:r 		\
+		-U lfuse:r:$(DUMPDIR)/lfuse.bin:r 		\
+		-U efuse:r:$(DUMPDIR)/efuse.bin:r
 
 restoredump:
-	$(AVRDUDE)										\
-		-U flash:w:dump_$(DEVICE)/flash.bin:r 		\
-		-U eeprom:w:dump_$(DEVICE)/eeprom.bin:r 	\
-		-U hfuse:w:dump_$(DEVICE)/hfuse.bin:r 		\
-		-U lfuse:w:dump_$(DEVICE)/lfuse.bin:r 		\
-		-U efuse:w:dump_$(DEVICE)/efuse.bin:r
+	$(AVRDUDE)									\
+		-U flash:w:$(DUMPDIR)/flash.bin:r 		\
+		-U eeprom:w:$(DUMPDIR)/eeprom.bin:r 	\
+		-U hfuse:w:$(DUMPDIR)/hfuse.bin:r 		\
+		-U lfuse:w:$(DUMPDIR)/lfuse.bin:r 		\
+		-U efuse:w:$(DUMPDIR)/efuse.bin:r
 
 shell:
 	$(AVRDUDE) -t
@@ -65,9 +71,9 @@ erase:
 	$(AVRDUDE) -e
 
 cleandump:
-	rm -rf dump_$(DEVICE)
+	rm -rf $(DUMPDIR)
 
 clean:
-	rm -f $(OBJS) build/{$(NAME).elf,$(NAME).hex,$(NAME).eeprom}
+	rm -f $(OBJDIR)/*
 
 cleanall: clean cleandump
