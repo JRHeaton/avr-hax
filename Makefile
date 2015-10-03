@@ -11,9 +11,9 @@ CFLAGS=	-Wall \
 		-std=c++11 \
 		-DF_CPU=$(F_CPU)
 NAME=hax
-OBJS=build/main.o build/LCD.o build/Pin.o
-
 AVRDUDE=avrdude -p $(DEVICE) -c $(PROGRAMMER)
+
+OBJS=build/main.o build/LCD.o build/Pin.o
 
 all: build
 
