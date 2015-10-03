@@ -7,18 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0946DD521BAF91DE0087FB19 /* USART0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0946DD501BAF91DE0087FB19 /* USART0.cpp */; settings = {ASSET_TAGS = (); }; };
-		09B4FCF41BAF52A900C10467 /* hax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 09B4FCC11BAF51E200C10467 /* hax.cpp */; };
-		09B4FCF51BAF52AB00C10467 /* LCD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 09B4FCC21BAF51E200C10467 /* LCD.cpp */; };
+		094A2A471BBFBCC200ED8149 /* LCD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 094A2A441BBFBCA300ED8149 /* LCD.cpp */; };
+		094A2A481BBFBCC200ED8149 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 094A2A451BBFBCA300ED8149 /* main.cpp */; };
+		094A2A491BBFBCC200ED8149 /* USART0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 094A2A461BBFBCA300ED8149 /* USART0.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0946DD4F1BAF6F330087FB19 /* index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = index; sourceTree = BUILT_PRODUCTS_DIR; };
-		0946DD501BAF91DE0087FB19 /* USART0.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = USART0.cpp; sourceTree = "<group>"; };
-		0946DD511BAF91DE0087FB19 /* USART0.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = USART0.h; sourceTree = "<group>"; };
-		09B4FCC11BAF51E200C10467 /* hax.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hax.cpp; sourceTree = "<group>"; };
-		09B4FCC21BAF51E200C10467 /* LCD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCD.cpp; sourceTree = "<group>"; };
-		09B4FCC31BAF51E200C10467 /* LCD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCD.h; sourceTree = "<group>"; };
+		0946DD4F1BAF6F330087FB19 /* index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = index; path = "/Users/j/dev/projects/atmega328p-stuff/hax/build/Debug/index"; sourceTree = "<absolute>"; };
+		094A2A401BBFBCA300ED8149 /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
+		094A2A411BBFBCA300ED8149 /* LCD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCD.h; sourceTree = "<group>"; };
+		094A2A421BBFBCA300ED8149 /* USART0.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = USART0.h; sourceTree = "<group>"; };
+		094A2A441BBFBCA300ED8149 /* LCD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCD.cpp; sourceTree = "<group>"; };
+		094A2A451BBFBCA300ED8149 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		094A2A461BBFBCA300ED8149 /* USART0.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = USART0.cpp; sourceTree = "<group>"; };
+		094A2A4A1BBFBE8E00ED8149 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; path = Makefile; sourceTree = SOURCE_ROOT; tabWidth = 4; usesTabs = 1; };
 		09F4B4A71BAF534D00078869 /* alloca.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloca.h; sourceTree = "<group>"; };
 		09F4B4A81BAF534D00078869 /* assert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = assert.h; sourceTree = "<group>"; };
 		09F4B4AA1BAF534D00078869 /* boot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = boot.h; sourceTree = "<group>"; };
@@ -321,21 +323,44 @@
 		09F4B5D51BAF534D00078869 /* parity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parity.h; sourceTree = "<group>"; };
 		09F4B5D61BAF534D00078869 /* setbaud.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = setbaud.h; sourceTree = "<group>"; };
 		09F4B5D71BAF534D00078869 /* twi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = twi.h; sourceTree = "<group>"; };
-		09F4B5D81BAF546800078869 /* build */ = {isa = PBXFileReference; lastKnownFileType = text; path = build; sourceTree = "<group>"; };
-		09F4B5D91BAF546800078869 /* flash */ = {isa = PBXFileReference; lastKnownFileType = text; path = flash; sourceTree = "<group>"; };
-		09F4B5DA1BAF546800078869 /* hax */ = {isa = PBXFileReference; lastKnownFileType = file; path = hax; sourceTree = "<group>"; };
-		09F4B5DB1BAF546800078869 /* hax.hex */ = {isa = PBXFileReference; lastKnownFileType = text; path = hax.hex; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		09B4FCB61BAF51B400C10467 = {
+		094A2A3F1BBFBCA300ED8149 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				094A2A401BBFBCA300ED8149 /* constants.h */,
+				094A2A411BBFBCA300ED8149 /* LCD.h */,
+				094A2A421BBFBCA300ED8149 /* USART0.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		094A2A431BBFBCA300ED8149 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				094A2A441BBFBCA300ED8149 /* LCD.cpp */,
+				094A2A461BBFBCA300ED8149 /* USART0.cpp */,
+				094A2A451BBFBCA300ED8149 /* main.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		094A2A4B1BBFC22900ED8149 /* avr  */ = {
 			isa = PBXGroup;
 			children = (
 				09F4B4A61BAF534D00078869 /* include */,
-				09F4B5DE1BAF548600078869 /* src */,
-				09F4B5DC1BAF546D00078869 /* scripts */,
-				09F4B5DD1BAF547200078869 /* build */,
-				0946DD4F1BAF6F330087FB19 /* index */,
+			);
+			name = "avr ";
+			sourceTree = "<group>";
+		};
+		09B4FCB61BAF51B400C10467 = {
+			isa = PBXGroup;
+			children = (
+				094A2A4A1BBFBE8E00ED8149 /* Makefile */,
+				094A2A4B1BBFC22900ED8149 /* avr  */,
+				094A2A3F1BBFBCA300ED8149 /* include */,
+				094A2A431BBFBCA300ED8149 /* src */,
 			);
 			sourceTree = "<group>";
 		};
@@ -359,8 +384,8 @@
 				09F4B5D01BAF534D00078869 /* util */,
 			);
 			name = include;
-			path = "../../../../../../usr/local/CrossPack-AVR-20131216/avr/include";
-			sourceTree = "<group>";
+			path = "/usr/local/CrossPack-AVR-20131216/avr/include";
+			sourceTree = "<absolute>";
 		};
 		09F4B4A91BAF534D00078869 /* avr */ = {
 			isa = PBXGroup;
@@ -673,50 +698,20 @@
 			path = util;
 			sourceTree = "<group>";
 		};
-		09F4B5DC1BAF546D00078869 /* scripts */ = {
-			isa = PBXGroup;
-			children = (
-				09F4B5D81BAF546800078869 /* build */,
-				09F4B5D91BAF546800078869 /* flash */,
-			);
-			name = scripts;
-			sourceTree = "<group>";
-		};
-		09F4B5DD1BAF547200078869 /* build */ = {
-			isa = PBXGroup;
-			children = (
-				09F4B5DA1BAF546800078869 /* hax */,
-				09F4B5DB1BAF546800078869 /* hax.hex */,
-			);
-			name = build;
-			sourceTree = "<group>";
-		};
-		09F4B5DE1BAF548600078869 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				09B4FCC11BAF51E200C10467 /* hax.cpp */,
-				09B4FCC21BAF51E200C10467 /* LCD.cpp */,
-				09B4FCC31BAF51E200C10467 /* LCD.h */,
-				0946DD501BAF91DE0087FB19 /* USART0.cpp */,
-				0946DD511BAF91DE0087FB19 /* USART0.h */,
-			);
-			name = src;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
-		09B4FCBB1BAF51B400C10467 /* hax */ = {
+		09B4FCBB1BAF51B400C10467 /* build */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = "$(ACTION)";
-			buildConfigurationList = 09B4FCBE1BAF51B400C10467 /* Build configuration list for PBXLegacyTarget "hax" */;
+			buildArgumentsString = build;
+			buildConfigurationList = 09B4FCBE1BAF51B400C10467 /* Build configuration list for PBXLegacyTarget "build" */;
 			buildPhases = (
 			);
-			buildToolPath = ./build;
+			buildToolPath = make;
 			buildWorkingDirectory = "";
 			dependencies = (
 			);
-			name = hax;
+			name = build;
 			passBuildSettingsInEnvironment = 1;
 			productName = hax;
 		};
@@ -767,7 +762,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				09B4FCBB1BAF51B400C10467 /* hax */,
+				09B4FCBB1BAF51B400C10467 /* build */,
 				09B4FCEB1BAF529B00C10467 /* index */,
 			);
 		};
@@ -778,9 +773,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09B4FCF41BAF52A900C10467 /* hax.cpp in Sources */,
-				0946DD521BAF91DE0087FB19 /* USART0.cpp in Sources */,
-				09B4FCF51BAF52AB00C10467 /* LCD.cpp in Sources */,
+				094A2A471BBFBCC200ED8149 /* LCD.cpp in Sources */,
+				094A2A481BBFBCC200ED8149 /* main.cpp in Sources */,
+				094A2A491BBFBCC200ED8149 /* USART0.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -815,6 +810,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					__AVR_AT90USB162__,
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -927,7 +923,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		09B4FCBE1BAF51B400C10467 /* Build configuration list for PBXLegacyTarget "hax" */ = {
+		09B4FCBE1BAF51B400C10467 /* Build configuration list for PBXLegacyTarget "build" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				09B4FCBF1BAF51B400C10467 /* Debug */,
