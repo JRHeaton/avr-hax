@@ -15,7 +15,7 @@ CFLAGS=	-Wall \
 NAME=hax
 AVRDUDE=avrdude -p $(DEVICE) -c $(PROGRAMMER)
 
-OBJS=build/main.o build/LCD.o build/Pin.o
+OBJS=build/main.o build/LCD.o build/Pin.o build/Port.o
 
 all: build
 

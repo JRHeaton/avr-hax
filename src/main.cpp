@@ -11,12 +11,13 @@ unsigned char greeting[] = "what's up?";
 
 int main() {
     
-    Pin pb6 = { &DDRB, &PORTB, &PINB, PB6 };
+    Port portB = {&DDRB, &PINB, &PORTB};
+    Pin pb6 = {&portB, PB6};
     pb6.setMode(OUTPUT);
     
     while (1) {
+        _delay_ms(1000);
         pb6.toggle();
-        _delay_ms(500);
     }
     
     return 0;

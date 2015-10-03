@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include "constants.h"
+#include "Port.h"
 
 #define INPUT           0
 #define INPUT_PULLUP    1
@@ -18,28 +19,27 @@
 
 struct Pin {
 public:
-    
-    volatile uint8_t *port_direction, *port_output, *port_input;
+    Port *port;
     uint8_t pin_number;
     
     void setMode(uint8_t mode) {
         switch (mode) {
             case INPUT:
-                UNSET(*port_direction, pin_number);
+                UNSET(*port->direction, pin_number);
                 break;
             case OUTPUT:
-                SET(*port_direction, pin_number);
+                SET(*port->direction, pin_number);
                 break;
             case INPUT_PULLUP:
-                UNSET(*port_direction, pin_number);
+                UNSET(*port->direction, pin_number);
                 high();
                 break;
         }
     }
     
-    void high() { SET(*port_output, pin_number); }
-    void low()  { UNSET(*port_output, pin_number); }
-    void toggle() { TOGGLE(*port_output, pin_number); }
+    void high() { SET(*port->output, pin_number); }
+    void low()  { UNSET(*port->output, pin_number); }
+    void toggle() { TOGGLE(*port->output, pin_number); }
 };
 
 #endif /* Pin_h */
