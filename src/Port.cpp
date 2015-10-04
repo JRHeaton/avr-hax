@@ -22,6 +22,44 @@ void Port::setAllPinMode(uint8_t mode) {
     }
 }
 
+void Port::setHighNibbleMode(uint8_t mode) {
+    uint8_t value = *direction;
+    value &= 0x0F;
+    
+    switch (mode) {
+        case INPUT:
+            *direction = value;
+            break;
+        case OUTPUT:
+            value |= 0xF0;
+            *direction = value;
+            break;
+        case INPUT_PULLUP:
+            *direction = value;
+            *output |= 0xF0;
+            break;
+    }
+}
+
+void Port::setLowNibbleMode(uint8_t mode) {
+    uint8_t value = *direction;
+    value &= 0xF0;
+    
+    switch (mode) {
+        case INPUT:
+            *direction = value;
+            break;
+        case OUTPUT:
+            value |= 0x0F;
+            *direction = value;
+            break;
+        case INPUT_PULLUP:
+            *direction = value;
+            *output |= 0x0F;
+            break;
+    }
+}
+
 void Port::writeByte(uint8_t byte) {
     *output = byte;
 }

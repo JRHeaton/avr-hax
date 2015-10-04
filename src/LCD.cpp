@@ -32,9 +32,9 @@ void LCD::setEnable(bool enable) {
 }
 
 void LCD::strobeEnable() {
-    setEnable(true);
+    E->write(HIGH);
     _delay_ms(LCD_STROBE_DURATION);
-    setEnable(false);
+    E->write(LOW);
 }
 
 uint8_t LCD::readBusyFlagAndAC() {
@@ -44,10 +44,10 @@ uint8_t LCD::readBusyFlagAndAC() {
     if (_8bitmode) {
         DB->setAllPinMode(INPUT);
         
-        setEnable(true);
+        E->write(HIGH);
         _delay_ms(LCD_STROBE_DURATION);
         uint8_t ret = DB->readByte();
-        setEnable(false);
+        E->write(LOW);
         
         DB->setAllPinMode(OUTPUT);
         
@@ -55,32 +55,26 @@ uint8_t LCD::readBusyFlagAndAC() {
     } else {
         
         // Set high 4 pins to input
-        DB->setPinMode(7, INPUT);
-        DB->setPinMode(6, INPUT);
-        DB->setPinMode(5, INPUT);
-        DB->setPinMode(4, INPUT);
+        DB->setHighNibbleMode(INPUT);
         
         // Turn on E, wait
-        setEnable(true);
+        E->write(HIGH);
         _delay_ms(LCD_STROBE_DURATION);
 
         // Read high 4 bits, turn off E
-        unsigned char high = DB->readByte() & 0xF0;
-        setEnable(false);
+        uint8_t high = DB->readByte() & 0xF0;
+        E->write(LOW);
         
         // Turn on E, wait
-        setEnable(true);
+        E->write(HIGH);
         _delay_ms(LCD_STROBE_DURATION);
 
         // Read low 4 bits, turn off E
-        unsigned char low = DB->readByte() & 0x0F;
-        setEnable(false);
+        uint8_t low = DB->readByte() & 0x0F;
+        E->write(LOW);
 
         // Set high 4 pins to output
-        DB->setPinMode(7, OUTPUT);
-        DB->setPinMode(6, OUTPUT);
-        DB->setPinMode(5, OUTPUT);
-        DB->setPinMode(4, OUTPUT);
+        DB->setHighNibbleMode(OUTPUT);
         
         return (high | low);
     }
@@ -181,10 +175,7 @@ void LCD::functionSet(bool _8bit, bool _2line, bool useBigFont) {
     if (_8bit) {
         DB->setAllPinMode(OUTPUT);
     } else {
-        DB->setPinMode(7, OUTPUT);
-        DB->setPinMode(6, OUTPUT);
-        DB->setPinMode(5, OUTPUT);
-        DB->setPinMode(4, OUTPUT);
+        DB->setHighNibbleMode(OUTPUT);
         
         // Set up for special command
         busyWait();
@@ -194,7 +185,6 @@ void LCD::functionSet(bool _8bit, bool _2line, bool useBigFont) {
         // Send high nibble of "set 4bit" command
         DB->writeHighNibble(cmd);
         strobeEnable();
-        DB->writeHighNibble(0);
     }
     
     _8bitmode = _8bit;

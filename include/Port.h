@@ -10,6 +10,8 @@
 struct PortType {
 public:
     virtual void setPinMode(uint8_t pin, uint8_t mode) = 0;
+    virtual void setHighNibbleMode(uint8_t mode) = 0;
+    virtual void setLowNibbleMode(uint8_t mode) = 0;
     virtual void setAllPinMode(uint8_t mode) = 0;
     virtual void writeByte(uint8_t byte) = 0;
     virtual void writeHighNibble(uint8_t byte) = 0;
@@ -34,6 +36,8 @@ public:
     
     virtual void setPinMode(uint8_t pin, uint8_t mode);
     virtual void setAllPinMode(uint8_t mode);
+    virtual void setHighNibbleMode(uint8_t mode);
+    virtual void setLowNibbleMode(uint8_t mode);
     virtual void writeByte(uint8_t byte);
     virtual void writeHighNibble(uint8_t byte);
     virtual void writeLowNibble(uint8_t byte);

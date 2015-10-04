@@ -57,7 +57,7 @@ _delay_ms(26);
     while (1) {
         printf("\n\r>> ");
 
-        char cmd[0x20] = { 0 };
+        char cmd[80] = { 0 };
         uint8_t i=0;
         while (1) {
             char c = getchar();
@@ -71,9 +71,6 @@ _delay_ms(26);
         
         if (!strcmp(cmd, "clear")) {
             m.clearDisplay();
-            
-            uint8_t addr = m.readBusyFlagAndAC() & 0b01111111;
-            m.setDRAMAddress(addr + 10);
         }
         else if (!strcmp(cmd, "blink")) {
             m.displayMode(true, true, (blink = !blink));
