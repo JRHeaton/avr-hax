@@ -1,12 +1,12 @@
 //
-//  USART0.cpp
+//  USART.cpp
 //  hax
 //
 //  Created by John Heaton on 9/20/15.
 //  Copyright © 2015 John Heaton. All rights reserved.
 //
 
-#include "USART0.h"
+#include "USART.h"
 
 #include <avr/io.h>
 #include <util/delay.h>

@@ -32,70 +32,21 @@ public:
          volatile uint8_t *output)
     : direction(direction), input(input), output(output) { }
     
-    virtual void setPinMode(uint8_t pin, uint8_t mode) {
-        switch (mode) {
-            case INPUT: UNSET(*direction, pin); break;
-            case OUTPUT: SET(*direction, pin); break;
-            case INPUT_PULLUP:
-                UNSET(*direction, pin);
-                SET(*output, pin);
-                break;
-        }
-    }
-    
-    virtual void setAllPinMode(uint8_t mode) {
-        switch (mode) {
-            case INPUT: *direction = 0;  break;
-            case OUTPUT: *direction = 0xFF; break;
-            case INPUT_PULLUP:
-                *direction = 0;
-                *output = 0xFF;
-                break;
-        }
-    }
-    
-    virtual void writeByte(uint8_t byte) {
-        *output = byte;
-    }
-    
-    virtual void writeHighNibble(uint8_t byte) {
-        uint8_t value = *output;
-        value &= 0x0F;
-        value |= byte & 0xF0;
-        *output = value;
-    }
-    
-    virtual void writeLowNibble(uint8_t byte) {
-        uint8_t value = *output;
-        value &= 0xF0;
-        value |= byte & 0x0F;
-        *output = value;
-    }
-    
-    virtual void writePin(uint8_t pin, bool high) {
-        if (high)   { SET(*output, pin); }
-        else        { UNSET(*output, pin); }
-    }
-    
-    virtual uint8_t readByte() {
-        return *input;
-    }
-    
-    virtual bool readPin(uint8_t pin) {
-        return (*input & _BV(pin));
-    }
-    
-    virtual bool togglePin(uint8_t pin) {
-        *output ^= uint8_t(pin);
-        return *output;
-    }
-    
-    Pin operator[] (uint8_t index) {
-        return { this, index };
-    }
+    virtual void setPinMode(uint8_t pin, uint8_t mode);
+    virtual void setAllPinMode(uint8_t mode);
+    virtual void writeByte(uint8_t byte);
+    virtual void writeHighNibble(uint8_t byte);
+    virtual void writeLowNibble(uint8_t byte);
+    virtual void writePin(uint8_t pin, bool high);
+    virtual uint8_t readByte();
+    virtual bool readPin(uint8_t pin);
+    virtual bool togglePin(uint8_t pin);
+    Pin operator[] (uint8_t index);
 };
 
 #define DEFINE_PORT(xx) Port xx = Port(&DDR ## xx, &PIN ## xx, &PORT ##xx);
+
+#ifndef NO_PORTMAP
 
 struct {
 #ifdef PORTA
@@ -122,5 +73,7 @@ struct {
     DEFINE_PORT(F)
 #endif
 } ports;
+
+#endif
 
 #endif

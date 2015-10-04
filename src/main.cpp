@@ -8,7 +8,7 @@
 #include "Pin.h"
 #include "PinMap.h"
 #include "LCD.h"
-#include "USART0.h"
+#include "USART.h"
 
 __attribute__((section(".eeprom")))
 unsigned char sequence = 0x0;
@@ -71,6 +71,9 @@ _delay_ms(26);
         
         if (!strcmp(cmd, "clear")) {
             m.clearDisplay();
+            
+            uint8_t addr = m.readBusyFlagAndAC() & 0b01111111;
+            m.setDRAMAddress(addr + 10);
         }
         else if (!strcmp(cmd, "blink")) {
             m.displayMode(true, true, (blink = !blink));

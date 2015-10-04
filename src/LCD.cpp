@@ -1,8 +1,6 @@
 #include "LCD.h"
 #include <util/delay.h>
 
-#include "USART0.h"
-
 LCD::LCD(Pin *RS,
          Pin *RW,
          Pin *E,

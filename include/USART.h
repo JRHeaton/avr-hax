@@ -1,13 +1,13 @@
 //
-//  USART0.h
+//  USART.h
 //  hax
 //
 //  Created by John Heaton on 9/20/15.
 //  Copyright © 2015 John Heaton. All rights reserved.
 //
 
-#ifndef USART0_h
-#define USART0_h
+#ifndef USART_h
+#define USART_h
 
 #include "constants.h"
 #include <stdio.h>
@@ -51,4 +51,4 @@ extern USART USART1;
 extern USART USART1;
 #endif
 
-#endif /* USART0_h */
+#endif /* USART_h */

@@ -6,7 +6,8 @@ CFLAGS				= -Wall					\
 						-mmcu=$(DEVICE)		\
 						-std=c++11			\
 						-DF_CPU=$(F_CPU)	\
-						-DF_USB=$(F_USB)
+						-DF_USB=$(F_USB)	\
+#						-DNO_PORTMAP -DNO_PINMAP
 FLASH_COPY_FLAGS	= -R .eeprom
 EEPROM_COPY_FLAGS	= -j .eeprom --change-section-lma .eeprom=0x0
 AVRDUDE				= avrdude -p $(DEVICE) -c $(PROGRAMMER) -V

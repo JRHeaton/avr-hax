@@ -4,6 +4,8 @@
 #include "Pin.h"
 #include "Port.h"
 
+#ifndef NO_PINMAP
+
 #ifdef __AVR_AT90USB162__
 Pin pins[] = {
     { NULL, 0 },        // offset by 1 (reference pins by board value)
@@ -68,6 +70,8 @@ Pin pins[] = {
     { &ports.B, 2 },
     { &ports.B, 1 },
 };
+
+#endif
 
 #endif
 
