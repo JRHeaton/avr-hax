@@ -36,4 +36,39 @@ Pin pins[] = {
 };
 #endif
 
+#ifdef __AVR_ATmega328P__
+Pin pins[] = {
+    { NULL, 0 },        // offset by 1 (reference pins by board value)
+    { &ports.C, 6 },
+    { &ports.D, 0 },
+    { &ports.D, 1 },
+    { &ports.D, 2 },
+    { &ports.D, 3 },
+    { &ports.D, 4 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { &ports.B, 6 },
+    { &ports.B, 7 },
+    { &ports.D, 5 },
+    { &ports.D, 6 },
+    { &ports.D, 7 },
+    { &ports.B, 0 },
+    { &ports.C, 5 },
+    { &ports.C, 4 },
+    { &ports.C, 3 },
+    { &ports.C, 2 },
+    { &ports.C, 1 },
+    { &ports.C, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { &ports.B, 5 },
+    { &ports.B, 4 },
+    { &ports.B, 3 },
+    { &ports.B, 2 },
+    { &ports.B, 1 },
+};
+
+#endif
+
 #endif /* PinMap_h */
