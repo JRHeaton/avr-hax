@@ -75,7 +75,7 @@ _delay_ms(26);
         else if (!strcmp(cmd, "blink")) {
             m.displayMode(true, true, (blink = !blink));
         }
-        if (!strcmp(cmd, " ")) {
+        else if (!strcmp(cmd, " ")) {
             STROBE(power, 50);
         }
         else if (!strcmp(cmd, "k")) {
