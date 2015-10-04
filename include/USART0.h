@@ -11,22 +11,44 @@
 
 #include "constants.h"
 #include <stdio.h>
+#include <avr/io.h>
 
-class USART0 {
+struct USART {
 public:
     
-    static void init(unsigned long baud);
-    static void enableInput(bool enable);
-    static void enableOutput(bool enable);
-    static void write(byte data);
-    static byte read();
+    struct Registers {
+        volatile uint8_t *UBRRH; // baud rate high
+        volatile uint8_t *UBRRL; // baud rate low
+        volatile uint8_t *UCSRA; // control/status A
+        volatile uint8_t *UCSRB; // control/status B
+        volatile uint8_t *UCSRC; // control/status C
+        volatile uint8_t *UDRN;  // i/o data
+    };
     
-    static FILE file;
+    USART(Registers regs);
+    
+    void init(unsigned long baud);
+    void enableInput(bool enable);
+    void enableOutput(bool enable);
+    void write(uint8_t data);
+    uint8_t read();
+    
+    FILE file;
     
 protected:
+    
+    Registers regs;
     
     static int file_put(char c, FILE *f);
     static int file_get(FILE *f);
 };
+
+#ifdef UDR0
+extern USART USART1;
+#endif
+
+#ifdef UDR1
+extern USART USART1;
+#endif
 
 #endif /* USART0_h */

@@ -11,8 +11,10 @@
 
 #include <stdint.h>
 #include "constants.h"
-#include "Port.h"
 
+struct Port;
+
+// Pin modes
 #define INPUT           0
 #define INPUT_PULLUP    1
 #define OUTPUT          2
@@ -24,11 +26,8 @@ public:
     uint8_t pin_number;
         
     void setMode(uint8_t mode);
-    void high();
-    void low();
+    void write(uint8_t value);
     void toggle();
-    
-    void operator= (uint8_t value);
 };
 
 #endif /* Pin_h */

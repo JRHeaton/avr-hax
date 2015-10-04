@@ -1,8 +1,11 @@
 #ifndef LCD_H
 #define LCD_H
 
-#include "constants.h"
 #include <stdio.h>
+
+#include "constants.h"
+#include "Pin.h"
+#include "Port.h"
 
 #ifndef LCD_STROBE_DURATION
 #define LCD_STROBE_DURATION 1
@@ -11,12 +14,13 @@
 class LCD {
 public:
     
-    LCD(addr *data_dir, addr *data_port, addr *data_pin,
-        addr *ctrl_dir, addr *ctrl_port,
-        byte rs, byte rw, byte e);
+    LCD(Pin *RS,
+        Pin *RW,
+        Pin *E,
+        PortType *DB);
     
     // - I/O
-    void sendCommand(byte cmd);
+    void sendCommand(uint8_t cmd);
     void sendCharacter(char character);
     void sendString(const char *string);
     
@@ -32,8 +36,8 @@ public:
     void functionSet(bool _8bit,
                      bool _2line,
                      bool useBigFont);
-    void setDRAMAddress(byte address);
-    byte readBusyFlagAndAC();           // top bit is busy flag, low 7 are AC
+    void setDRAMAddress(uint8_t address);
+    uint8_t readBusyFlagAndAC();        // top bit is busy flag, low 7 are AC
     void busyWait();                    // wait until busy flag unset
     
     FILE file;
@@ -50,9 +54,10 @@ protected:
     static int file_put(char c, FILE *f);
     static int file_get(FILE *f);
     
-    addr *data_dir, *data_port, *data_pin;
-    addr *ctrl_dir, *ctrl_port;
-    byte rs, rw, e;
+    Pin *RS;
+    Pin *RW;
+    Pin *E;
+    PortType *DB;
     
     bool _8bitmode = true;
 };

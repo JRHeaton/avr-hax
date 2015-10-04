@@ -1,13 +1,14 @@
 #ifndef HAX_CONSTANTS_H
 #define HAX_CONSTANTS_H
 
-typedef unsigned char byte;
-typedef volatile byte addr;
+#include <stdint.h>
+
+#define LOW 0
+#define HIGH 1
 
 // Bitwise macros
-#define BYTE(bit) (1 << (bit))
-#define SET(b, bit) ((b) |= BYTE(bit))
-#define UNSET(b, bit) ((b) &= ~BYTE(bit))
-#define TOGGLE(b, bit) ((b) ^= BYTE(bit))
+#define SET(b, bit) ((b) |= (1 << bit))
+#define UNSET(b, bit) ((b) &= ~(1 << bit))
+#define TOGGLE(b, bit) ((b) ^= (1 << bit))
 
 #endif

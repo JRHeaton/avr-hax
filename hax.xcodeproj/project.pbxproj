@@ -730,7 +730,7 @@
 		};
 		09B4FCBB1BAF51B400C10467 /* build */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = build;
+			buildArgumentsString = "";
 			buildConfigurationList = 09B4FCBE1BAF51B400C10467 /* Build configuration list for PBXLegacyTarget "build" */;
 			buildPhases = (
 			);

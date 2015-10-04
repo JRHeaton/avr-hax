@@ -3,15 +3,14 @@
 
 #include "USART0.h"
 
-LCD::LCD(addr *data_dir, addr *data_port, addr *data_pin,
-    addr *ctrl_dir, addr *ctrl_port,
-    byte rs, byte rw, byte e) :
-data_dir(data_dir), data_port(data_port), data_pin(data_pin),
-ctrl_dir(ctrl_dir), ctrl_port(ctrl_port),
-rs(rs), rw(rw), e(e)
+LCD::LCD(Pin *RS,
+         Pin *RW,
+         Pin *E,
+         PortType *DB) : RS(RS), RW(RW), E(E), DB(DB)
 {
-    *ctrl_dir = BYTE(rs) | BYTE(rw) | BYTE(e);
-    *data_dir = 0XFF;
+    RS->setMode(OUTPUT);
+    RW->setMode(OUTPUT);
+    E->setMode(OUTPUT);
     
     file.put = LCD::file_put;
     file.udata = this;
@@ -19,21 +18,19 @@ rs(rs), rw(rw), e(e)
 }
 
 void LCD::selectDR() {
-    SET(*ctrl_port, rs);
+    RS->write(HIGH);
 }
 
 void LCD::selectIR() {
-    UNSET(*ctrl_port, rs);
+    RS->write(LOW);
 }
 
 void LCD::setRead(bool read) {
-    if (read)   { SET(*ctrl_port, rw); }
-    else        { UNSET(*ctrl_port, rw); }
+    RW->write(read);
 }
 
 void LCD::setEnable(bool enable) {
-    if (enable) { SET(*ctrl_port, e); }
-    else        { UNSET(*ctrl_port, e); }
+    E->write(enable);
 }
 
 void LCD::strobeEnable() {
@@ -42,37 +39,50 @@ void LCD::strobeEnable() {
     setEnable(false);
 }
 
-byte LCD::readBusyFlagAndAC() {
+uint8_t LCD::readBusyFlagAndAC() {
     setRead(true);
     selectIR();
     
     if (_8bitmode) {
-        *data_dir = 0;
+        DB->setAllPinMode(INPUT);
         
         setEnable(true);
         _delay_ms(LCD_STROBE_DURATION);
-        unsigned char ret = *data_pin;
+        uint8_t ret = DB->readByte();
         setEnable(false);
         
-        *data_dir = 0xFF;
+        DB->setAllPinMode(OUTPUT);
         
         return ret;
     } else {
-        *data_dir &= ~(0xF0);
         
+        // Set high 4 pins to input
+        DB->setPinMode(7, INPUT);
+        DB->setPinMode(6, INPUT);
+        DB->setPinMode(5, INPUT);
+        DB->setPinMode(4, INPUT);
+        
+        // Turn on E, wait
         setEnable(true);
         _delay_ms(LCD_STROBE_DURATION);
 
-        unsigned char high = *data_pin & 0xF0;
+        // Read high 4 bits, turn off E
+        unsigned char high = DB->readByte() & 0xF0;
         setEnable(false);
         
+        // Turn on E, wait
         setEnable(true);
         _delay_ms(LCD_STROBE_DURATION);
 
-        unsigned char low = (*data_pin & 0xF0) >> 4;
+        // Read low 4 bits, turn off E
+        unsigned char low = DB->readByte() & 0x0F;
         setEnable(false);
-        
-        *data_dir |= 0xF0;
+
+        // Set high 4 pins to output
+        DB->setPinMode(7, OUTPUT);
+        DB->setPinMode(6, OUTPUT);
+        DB->setPinMode(5, OUTPUT);
+        DB->setPinMode(4, OUTPUT);
         
         return (high | low);
     }
@@ -84,29 +94,30 @@ void LCD::busyWait() {
     while ((readBusyFlagAndAC() & 0x80) == 0x80) {}
 }
 
-void LCD::sendCommand(byte cmd) {
+void LCD::sendCommand(uint8_t cmd) {
     busyWait();
     
     setRead(false);
     selectIR();
 
     if (_8bitmode) {
-        *data_port = cmd;
+        DB->writeByte(cmd);
         strobeEnable();
-        *data_port = 0;
+        DB->writeByte(0);
     } else {
-        byte high = cmd & 0xF0;
-        byte low = (cmd & 0x0F) << 4;
+        uint8_t high = cmd & 0xF0;
+        uint8_t low = (cmd & 0x0F) << 4;
         
-        *data_port &= ~(0xF0);
-        *data_port |= high;
+        // Send high 4 bits
+        DB->writeHighNibble(high);
         strobeEnable();
         
-        *data_port &= ~(0xF0);
-        *data_port |= low;
+        // Send low 4 bits
+        DB->writeHighNibble(low);
         strobeEnable();
         
-        *data_port &= ~(0xF0);
+        // Reset bus lines LOW
+        DB->writeHighNibble(0);
     }
 }
 
@@ -117,22 +128,23 @@ void LCD::sendCharacter(char character) {
     selectDR();
 
     if (_8bitmode) {
-        *data_port = character;
+        DB->writeByte(character);
         strobeEnable();
-        *data_port = 0;
+        DB->writeByte(0);
     } else {
-        byte high = character & 0xF0;
-        byte low = (character & 0x0F) << 4;
+        uint8_t high = character & 0xF0;
+        uint8_t low = (character & 0x0F) << 4;
         
-        *data_port &= ~(0xF0);
-        *data_port |= high;
+        // Send high 4 bits
+        DB->writeHighNibble(high);
         strobeEnable();
         
-        *data_port &= ~(0xF0);
-        *data_port |= low;
+        // Send low 4 bits
+        DB->writeHighNibble(low);
         strobeEnable();
         
-        *data_port &= ~(0xF0);
+        // Reset bus lines LOW
+        DB->writeHighNibble(0);
     }
 }
 
@@ -165,17 +177,35 @@ void LCD::shift(bool followDisplayShift,
 }
 
 void LCD::functionSet(bool _8bit, bool _2line, bool useBigFont) {
-    sendCommand((1 << 5) | (_8bit << 4) | (_2line << 3) | (useBigFont << 2));
+    uint8_t cmd = (1 << 5) | (_8bit << 4) | (_2line << 3) | (useBigFont << 2);
+    
+    // set up DB lines as output initially
+    if (_8bit) {
+        DB->setAllPinMode(OUTPUT);
+    } else {
+        DB->setPinMode(7, OUTPUT);
+        DB->setPinMode(6, OUTPUT);
+        DB->setPinMode(5, OUTPUT);
+        DB->setPinMode(4, OUTPUT);
+        
+        // Set up for special command
+        busyWait();
+        setRead(false);
+        selectIR();
+        
+        // Send high nibble of "set 4bit" command
+        DB->writeHighNibble(cmd);
+        strobeEnable();
+        DB->writeHighNibble(0);
+    }
     
     _8bitmode = _8bit;
-
-    if (!_8bit) {
-        // re-send proper function set after initial one sent as 8-bit (necessary
-        sendCommand((1 << 5) | (_8bit << 4) | (_2line << 3) | (useBigFont << 2));
-    }
+    
+    // Send (initial) command
+    sendCommand(cmd);
 }
 
-void LCD::setDRAMAddress(byte address) {
+void LCD::setDRAMAddress(uint8_t address) {
     sendCommand((1 << 7) | (address & 0x7F));
 }
 
