@@ -30,11 +30,14 @@ int main() {
     m.clearDisplay();
     m.returnHome();
     
-    m.sendString("yo");
+    stdin = &USART1.file;
+    stdout = &m.file;
+    
+    puts("> ");
     
     while (1) {
-        uint8_t byte = USART1.read();
-        m.sendCharacter(byte);
+        uint8_t byte = getchar();
+        putchar(byte);
         USART1.write(byte);
     }
     

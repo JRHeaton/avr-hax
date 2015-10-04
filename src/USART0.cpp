@@ -20,10 +20,10 @@ USART USART1((USART::Registers){ &UBRR1H, &UBRR1L, &UCSR1A, &UCSR1B, &UCSR1C, &U
 #endif
 
 USART::USART(Registers regs) : regs(regs) {    
-//    file.put = USART0::file_put;
-//    file.get = USART0::file_get;
-//    file.udata = 0;
-//    file.flags = __SRD | __SWR;
+    file.put = USART::file_put;
+    file.get = USART::file_get;
+    file.udata = this;
+    file.flags = __SRD | __SWR;
 }
 
 void USART::init(unsigned long baud) {
@@ -54,11 +54,22 @@ uint8_t USART::read() {
     return *regs.UDR;
 }
 
-//int USART::file_put(char c, FILE *f) {
-//    USART::write(c);
-//    return 0;
-//}
-//
-//int USART::file_get(FILE *f) {
-//    return USART0::read();
-//}
+int USART::file_put(char c, FILE *f) {
+    if (f != NULL) {
+        USART *val = (USART *)f->udata;
+        if (val != NULL) {
+            val->write(c);
+        }
+    }
+    return 0;
+}
+
+int USART::file_get(FILE *f) {
+    if (f != NULL) {
+        USART *val = (USART *)f->udata;
+        if (val != NULL) {
+            return val->read();
+        }
+    }
+    return 0;
+}
