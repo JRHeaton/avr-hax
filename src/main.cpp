@@ -3,6 +3,7 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
+#include <string.h>
 
 #include "Pin.h"
 #include "PinMap.h"
@@ -31,14 +32,71 @@ int main() {
     m.returnHome();
     
     stdin = &USART1.file;
-    stdout = &m.file;
+    stdout = &USART1.file;
     
-    puts("> ");
+    struct {
+        Pin *power;
+        Pin *menu;
+        Pin *down;
+        Pin *up;
+    } vape = { &pins[22], &pins[23], &pins[6], &pins[7] };
+    vape.power->setMode(OUTPUT);
+    vape.menu->setMode(OUTPUT);
+    vape.up->setMode(OUTPUT);
+    vape.down->setMode(OUTPUT);
+    
+    bool blink = true;
+    
+#define STROBE(member, duration)    \
+vape.member->write(1);          \
+_delay_ms(duration);            \
+vape.member->write(0);          \
+_delay_ms(26);
+
     
     while (1) {
-        uint8_t byte = getchar();
-        putchar(byte);
-        USART1.write(byte);
+        printf("\n\r>> ");
+
+        char cmd[0x20] = { 0 };
+        uint8_t i=0;
+        while (1) {
+            char c = getchar();
+            if (c == 0xD) {
+                break;
+            } else {
+                cmd[i++] = c;
+                putchar(c);
+            }
+        }
+        
+        if (!strcmp(cmd, "clear")) {
+            m.clearDisplay();
+        }
+        else if (!strcmp(cmd, "blink")) {
+            m.displayMode(true, true, (blink = !blink));
+        }
+        if (!strcmp(cmd, " ")) {
+            STROBE(power, 50);
+        }
+        else if (!strcmp(cmd, "k")) {
+            STROBE(up, 50);
+        }
+        else if (!strcmp(cmd, "j")) {
+            STROBE(down, 50);
+        }
+        else if (!strcmp(cmd, "m")) {
+            STROBE(menu, 50);
+        }
+        else if (!strcmp(cmd, "f1")) {
+            STROBE(menu, 50);
+            STROBE(menu, 50);
+            STROBE(menu, 50);
+            STROBE(menu, 50);
+            STROBE(up, 50);
+        }
+        else {
+            m.sendString(cmd);
+        }
     }
     
     return 0;
