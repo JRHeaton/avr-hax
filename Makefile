@@ -10,7 +10,7 @@ CFLAGS				= -Wall					\
 #						-DNO_PORTMAP -DNO_PINMAP
 FLASH_COPY_FLAGS	= -R .eeprom
 EEPROM_COPY_FLAGS	= -j .eeprom --change-section-lma .eeprom=0x0
-AVRDUDE				= avrdude -p $(DEVICE) -c $(PROGRAMMER) -V
+AVRDUDE				= avrdude -p $(DEVICE) -c $(PROGRAMMER) -V -B 1
 OBJDIR				= build
 DUMPDIR				= dump_$(DEVICE)
 SRCDIR				= src
