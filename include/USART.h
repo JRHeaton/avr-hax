@@ -44,7 +44,7 @@ protected:
 };
 
 #ifdef UDR0
-extern USART USART1;
+extern USART USART0;
 #endif
 
 #ifdef UDR1

@@ -12,7 +12,7 @@
 #include <util/delay.h>
 
 #ifdef UDR0
-extern USART USART1((USART::Registers){ &UBRR0H, &UBRR0L, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0 });
+USART USART0((USART::Registers){ &UBRR0H, &UBRR0L, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0 });
 #endif
 
 #ifdef UDR1
