@@ -716,7 +716,7 @@
 /* Begin PBXLegacyTarget section */
 		094A2A501BBFCDBE00ED8149 /* flash */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = flash;
+			buildArgumentsString = flashapp;
 			buildConfigurationList = 094A2A511BBFCDBE00ED8149 /* Build configuration list for PBXLegacyTarget "flash" */;
 			buildPhases = (
 			);

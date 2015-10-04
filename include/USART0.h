@@ -22,7 +22,7 @@ public:
         volatile uint8_t *UCSRA; // control/status A
         volatile uint8_t *UCSRB; // control/status B
         volatile uint8_t *UCSRC; // control/status C
-        volatile uint8_t *UDRN;  // i/o data
+        volatile uint8_t *UDR;   // i/o data
     };
     
     USART(Registers regs);

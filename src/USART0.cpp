@@ -35,23 +35,23 @@ void USART::init(unsigned long baud) {
 }
 
 void USART::enableInput(bool enable) {
-    if (enable) { SET(*regs.UCSRB, 1 << 4); }
-    else        { UNSET(*regs.UCSRB, 1 << 4); }
+    if (enable) { SET(*regs.UCSRB, 4); }
+    else        { UNSET(*regs.UCSRB, 4); }
 }
 
 void USART::enableOutput(bool enable) {
-    if (enable) { SET(*regs.UCSRB, 1 << 3); }
-    else        { UNSET(*regs.UCSRB, 1 << 3); }
+    if (enable) { SET(*regs.UCSRB, 3); }
+    else        { UNSET(*regs.UCSRB, 3); }
 }
 
 void USART::write(uint8_t data) {
-    while (!(*regs.UCSRA & (1 << 5))) {}
-    *regs.UDRN = data;
+    while ((*regs.UCSRA & (1 << 5)) == 0) {}
+    *regs.UDR = data;
 }
 
 uint8_t USART::read() {
     while (!(*regs.UCSRA & (1 << 7))) {}
-    return *regs.UDRN;
+    return *regs.UDR;
 }
 
 //int USART::file_put(char c, FILE *f) {
