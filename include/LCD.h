@@ -7,20 +7,32 @@
 #include "Pin.h"
 #include "Port.h"
 
-#ifndef LCD_STROBE_DURATION
-#define LCD_STROBE_DURATION 1
+#ifndef LCD_PULSE_DURATION_MICROS
+#define LCD_PULSE_DURATION_MICROS 1000
 #endif
 
 class LCD {
 public:
     
-    LCD(Pin *RS,
+    LCD(bool twoLineDisplay,
+        bool useLargerFont,
+        Pin *RS,
         Pin *RW,
         Pin *E,
-        PortType *DB);
+        Pin *DB7,
+        Pin *DB6,
+        Pin *DB5,
+        Pin *DB4,
+        Pin *DB3 = NULL,
+        Pin *DB2 = NULL,
+        Pin *DB1 = NULL,
+        Pin *DB0 = NULL);
+    
+    // - Initialization by instruction
+    void init();
     
     // - I/O
-    void sendCommand(uint8_t cmd);
+    void sendCommand(uint8_t cmd, bool busyWait=true);
     void sendCharacter(char character);
     void sendString(const char *string);
     
@@ -33,9 +45,6 @@ public:
                      bool cursorBlink);
     void shift(bool followDisplayShift,
                bool directionRight);
-    void functionSet(bool _8bit,
-                     bool _2line,
-                     bool useBigFont);
     void setDRAMAddress(uint8_t address);
     uint8_t readBusyFlagAndAC();        // top bit is busy flag, low 7 are AC
     void busyWait();                    // wait until busy flag unset
@@ -44,22 +53,28 @@ public:
     
 protected:
     
-    // - Basic control functions
-    void selectDR();                    // select data reg (RS)
-    void selectIR();                    // select inst reg (RS)
-    void setRead(bool read);            // set RW direction
-    void setEnable(bool enable);        // set E
-    void strobeEnable();                // set E for LCD_STROBE_DURATION ms
-    
     static int file_put(char c, FILE *f);
     static int file_get(FILE *f);
     
     Pin *RS;
     Pin *RW;
     Pin *E;
-    PortType *DB;
+    Pin *DB7;
+    Pin *DB6;
+    Pin *DB5;
+    Pin *DB4;
+    Pin *DB3;
+    Pin *DB2;
+    Pin *DB1;
+    Pin *DB0;
     
-    bool _8bitmode = true;
+    bool _8bitmode = true, twoLineDisplay, useLargerFont;
+    
+    void setDBMode(uint8_t mode);
+    void writeDB(uint8_t value);
+    uint8_t readDB();
+    
+    void pulseE();
 };
 
 #endif

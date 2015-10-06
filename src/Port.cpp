@@ -2,7 +2,10 @@
 
 void Port::setPinMode(uint8_t pin, uint8_t mode) {
     switch (mode) {
-        case INPUT: UNSET(*direction, pin); break;
+        case INPUT:
+            UNSET(*direction, pin);
+            UNSET(*output, pin); // disable pull-up
+            break;
         case OUTPUT: SET(*direction, pin); break;
         case INPUT_PULLUP:
             UNSET(*direction, pin);
@@ -13,7 +16,10 @@ void Port::setPinMode(uint8_t pin, uint8_t mode) {
 
 void Port::setAllPinMode(uint8_t mode) {
     switch (mode) {
-        case INPUT: *direction = 0;  break;
+        case INPUT:
+            *output = 0;
+            *direction = 0;
+            break;
         case OUTPUT: *direction = 0xFF; break;
         case INPUT_PULLUP:
             *direction = 0;
@@ -22,60 +28,8 @@ void Port::setAllPinMode(uint8_t mode) {
     }
 }
 
-void Port::setHighNibbleMode(uint8_t mode) {
-    uint8_t value = *direction;
-    value &= 0x0F;
-    
-    switch (mode) {
-        case INPUT:
-            *direction = value;
-            break;
-        case OUTPUT:
-            value |= 0xF0;
-            *direction = value;
-            break;
-        case INPUT_PULLUP:
-            *direction = value;
-            *output |= 0xF0;
-            break;
-    }
-}
-
-void Port::setLowNibbleMode(uint8_t mode) {
-    uint8_t value = *direction;
-    value &= 0xF0;
-    
-    switch (mode) {
-        case INPUT:
-            *direction = value;
-            break;
-        case OUTPUT:
-            value |= 0x0F;
-            *direction = value;
-            break;
-        case INPUT_PULLUP:
-            *direction = value;
-            *output |= 0x0F;
-            break;
-    }
-}
-
 void Port::writeByte(uint8_t byte) {
     *output = byte;
-}
-
-void Port::writeHighNibble(uint8_t byte) {
-    uint8_t value = *output;
-    value &= 0x0F;
-    value |= byte & 0xF0;
-    *output = value;
-}
-
-void Port::writeLowNibble(uint8_t byte) {
-    uint8_t value = *output;
-    value &= 0xF0;
-    value |= byte & 0x0F;
-    *output = value;
 }
 
 void Port::writePin(uint8_t pin, bool high) {

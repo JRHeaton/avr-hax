@@ -1,6 +1,7 @@
 CC					= avr-g++
 OBJCOPY				= avr-objcopy
 CFLAGS				= -Wall					\
+					  -Wno-reorder			\
 						-I$(INCLUDEDIR)		\
 						-O$(OPTIMIZATION)	\
 						-mmcu=$(DEVICE)		\

@@ -13,46 +13,57 @@
 __attribute__((section(".eeprom")))
 unsigned char sequence = 0x0;
 
-// Necessary since the actual standard lib isn't here to implement it
-extern "C" void __cxa_pure_virtual() {}
-
 int main() {
-    USART1.init(9600);
-    USART1.enableInput(true);
-    USART1.enableOutput(true);
+    USART serial = USART1;
     
-    LCD m(&pins[11], // RS
+    serial.init(9600);
+    serial.enableInput(true);
+    serial.enableOutput(true);
+    stdin = &serial.file;
+    stdout = &serial.file;
+    
+    LCD m(true,
+          false,
+          &pins[11], // RS
           &pins[12], // RW
           &pins[13], // E
-          &ports.B);
+          &pins[21],
+          &pins[20],
+          &pins[19],
+          &pins[18]);
     
-    m.functionSet(false, true, false);
+    m.init();
+    printf("--LCD initialized--\n\r");
+//    m.entryModeSet(true, false);
     m.displayMode(true, true, true);
+    printf("-display mode set\n\r");
     m.clearDisplay();
+    printf("-display cleared\n\r");
     m.returnHome();
+    printf("-display home\n\r");
     
-    stdin = &USART1.file;
-    stdout = &USART1.file;
     
-    struct {
-        Pin *power;
-        Pin *menu;
-        Pin *down;
-        Pin *up;
-    } vape = { &pins[22], &pins[23], &pins[6], &pins[7] };
-    vape.power->setMode(OUTPUT);
-    vape.menu->setMode(OUTPUT);
-    vape.up->setMode(OUTPUT);
-    vape.down->setMode(OUTPUT);
+    m.sendCharacter('a');
+    m.sendCharacter('j');
+    
+//    struct {
+//        Pin *power;
+//        Pin *menu;
+//        Pin *down;
+//        Pin *up;
+//    } vape = { &pins[22], &pins[23], &pins[6], &pins[7] };
+//    vape.power->setMode(OUTPUT);
+//    vape.menu->setMode(OUTPUT);
+//    vape.up->setMode(OUTPUT);
+//    vape.down->setMode(OUTPUT);
     
     bool blink = true;
-    
+
 #define STROBE(member, duration)    \
 vape.member->write(1);          \
 _delay_ms(duration);            \
 vape.member->write(0);          \
 _delay_ms(26);
-
     
     while (1) {
         printf("\n\r>> ");
@@ -69,31 +80,33 @@ _delay_ms(26);
             }
         }
         
+//        printf("command received\n");
+        
         if (!strcmp(cmd, "clear")) {
             m.clearDisplay();
         }
         else if (!strcmp(cmd, "blink")) {
             m.displayMode(true, true, (blink = !blink));
         }
-        else if (!strcmp(cmd, " ")) {
-            STROBE(power, 50);
-        }
-        else if (!strcmp(cmd, "k")) {
-            STROBE(up, 50);
-        }
-        else if (!strcmp(cmd, "j")) {
-            STROBE(down, 50);
-        }
-        else if (!strcmp(cmd, "m")) {
-            STROBE(menu, 50);
-        }
-        else if (!strcmp(cmd, "f1")) {
-            STROBE(menu, 50);
-            STROBE(menu, 50);
-            STROBE(menu, 50);
-            STROBE(menu, 50);
-            STROBE(up, 50);
-        }
+//        else if (!strcmp(cmd, " ")) {
+//            STROBE(power, 50);
+//        }
+//        else if (!strcmp(cmd, "k")) {
+//            STROBE(up, 50);
+//        }
+//        else if (!strcmp(cmd, "j")) {
+//            STROBE(down, 50);
+//        }
+//        else if (!strcmp(cmd, "m")) {
+//            STROBE(menu, 50);
+//        }
+//        else if (!strcmp(cmd, "f1")) {
+//            STROBE(menu, 50);
+//            STROBE(menu, 50);
+//            STROBE(menu, 50);
+//            STROBE(menu, 50);
+//            STROBE(up, 50);
+//        }
         else {
             m.sendString(cmd);
         }

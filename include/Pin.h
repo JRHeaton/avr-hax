@@ -26,7 +26,8 @@ public:
     uint8_t pin_number;
         
     void setMode(uint8_t mode);
-    void write(uint8_t value);
+    void write(bool value);
+    bool read();
     void toggle();
 };
 
